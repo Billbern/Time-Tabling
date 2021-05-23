@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Login</title>
+</head>
+<body>
+<link href='{{url_for("static", filename="css/stylesheet.css")}}' rel='stylesheet' type='text/css'>
+
+<div class="login">
+  <div style="margin-bottom: 50px" class="login-header">
+        <a href="/">
+            <img alt="" src="{{ url_for('static', filename='img/logo.png') }}" width="200px">
+        </a>
+  </div>
+  <h1 style="text-align: center; font-size: 25px; margin-top: -30px; padding-bottom: 30px">Login</h1>
+  <form class="login-form" action="" method="POST">
+    <h3>Email</h3>
+    <input type="text" name="mail" placeholder="School Email"/><br>
+    <h3>Password</h3>
+    <input type="password" name="pwd" placeholder="Password"/>
+    <br>
+    <input type="submit" value="Login" class="login-button"/>
+    <br>
+    <h6 class="password-reset"><a href="/auth/generate_password">Forgotten password?</h6>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+

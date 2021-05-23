@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            height: 100%;
+        }
+
+        body{
+            padding-top: 128px;
+            background-color: rgb(176, 183, 184);
+        }
+
+        .main-container{
+            height: 100%;
+        }
+
+        .main-container .top-container{
+            background-color: blueviolet;
+        }
+
+        .top-container a{
+            color: #fff;
+            padding: 16px 24px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a.active{
+            color: blueviolet;
+            background-color: #fff;
+        }
+
+        .main-container .bottom-container{
+            display: flex;
+            height: calc(100% - 51px);
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        .bottom-container > .inner{
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            flex-basis: auto;
+            padding-top: 16px;
+            position: relative;
+        }
+
+        .inner table{
+            margin: auto;
+        }
+
+        .inner table td, .inner table th{
+            text-align: center;
+            padding: 16px 8px;
+        }
+
+        .inner form{
+            bottom: 24px;
+            left: 10%;
+            width: 80%;
+            right: 10%;
+            position: absolute;
+        }
+
+        form input{
+            margin: 4px 0px;
+        }
+
+        form input[type=submit]{
+            color: #ffffff;
+            border-radius: 4px;
+            background-color: blueviolet;
+            box-shadow: 0px 4px 2px rgba(0,0,0,0.15);
+            padding: 8px 32px;
+            cursor: cursor;
+            border: none;
+        }
+
+    </style>
+    <title>Admin</title>
+</head>
+<body>
+    <div class="main-container">
+        <div class="top-container">
+            <a class="active data-items" href="#Courses">Courses</a>
+            <a class="data-items" href="#Students">Students</a>
+            <a class="data-items" href="#Lecturer">Lecturer</a>
+        </div>
+        <div class="bottom-container">
+            <div class="inner" id="Courses">
+                <table width="90%">
+                    <thead>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Number</th>
+                        <th>Description</th>
+                        <th>Year</th>
+                        <th>Credit Hours</th>
+                    </thead>
+                    <tbody>
+                        {% if courses %}
+                            {% for course in courses %}
+                            <tr>
+                                <td>{{course.id}}</td>
+                                <td>{{course.name}}</td>
+                                <td>{{course.number}}</td>
+                                <td>{{course.description}}</td>
+                                <td>{{course.level}}</td>
+                                <td>{{course.credit}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <form action="/admin/addcourse" method="post">
+                    <input type="text" name="name" placeholder="Course name" />
+                    <input type="text" name="number" placeholder="Course number" />
+                    <input type="text" name="desc"  placeholder="Course description"/>
+                    <input type="text" name="level" placeholder="Level"/>
+                    <input type="text" name="credit" placeholder="Credit hours"/>
+                    <br>
+                    <input type="submit" value="Add" />
+                </form>
+            </div>
+            <div class="inner" id="Students">
+                <table width="90%">
+                    <thead>
+                        <th>Id</th>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Level</th>
+                        <th>Department</th>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for student in students %}
+                            <tr id="tw">
+                                <td>{{student.id}}</td>
+                                <td>{{student.fullname}}</td>
+                                <td>{{student.phone}}</td>
+                                <td>{{student.email}}</td>
+                                <td>{{student.year}}</td>
+                                <td>{{student.department}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <form action="/admin/addstudents" method="post">
+                    <input type="text" name="firstname" placeholder="First name" />
+                    <input type="text" name="lastname" placeholder="Last name" />
+                    <input type="text" name="othername" placeholder="Other names" />
+                    <input type="text" name="year" placeholder="Year" />
+                    <input type="text" name="department"  placeholder="Department"/>
+                    <input type="text" name="email" placeholder="Email"/>
+                    <input type="text" name="phone" placeholder="Phone"/>
+                    <br>
+                    <input type="submit" value="Add" />
+                </form>
+            </div>
+            <div class="inner" id="Lecturer">
+                <table width="90%">
+                    <thead>
+                        <th>Id</th>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Office</th>
+                        <th>Role</th>
+                    </thead>
+                    <tbody>
+                        {% if lecturers %}
+                            {% for lecturer in lecturers %}
+                            <tr>
+                                <td>{{lecturer.id}}</td>
+                                <td>{{lecturer.fullname}}</td>
+                                <td>{{lecturer.phone}}</td>
+                                <td>{{lecturer.email}}</td>
+                                <td>{{lecturer.office}}</td>
+                                <td>{{lecturer.admin}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <form action="/admin/addlecturer" method="post">
+                    <input type="text" name="firstname" placeholder="First name" />
+                    <input type="text" name="lastname" placeholder="Last name" />
+                    <input type="text" name="othername" placeholder="Other name" />
+                    <input type="text" name="email" placeholder="Email" />
+                    <input type="text" name="phone"  placeholder="Phone number"/>
+                    <input type="text" name="office" placeholder="Office"/>
+                    <div>
+                        <label for="isadmin">Admin</label>
+                        <input type="checkbox" name="isadmin" />
+                    </div>
+                    <br>
+                    <input type="submit" value="Add" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const tabs = document.querySelectorAll('.data-items');
+
+        tabs.forEach(item => {
+            item.onclick = () => {
+                tabs.forEach(tab => {tab.classList.remove('active')});
+                item.classList.add('active');
+            }
+        })
+    </script>
+</body>
+</html>

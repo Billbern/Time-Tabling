@@ -1,0 +1,115 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+
+html{
+  height: 100%;
+  width: 100%;
+}
+
+
+body {
+  color: #555;
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 1.57143;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background:url('../img/bg1.jpg');
+  font-family: 'Ubuntu', "Roboto", "Open Sans", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+   
+}
+
+
+.login {
+  margin: 128px auto 0 auto;
+  max-width:500px;
+  background-color:#FFF;
+}
+
+
+.login-header {
+  color:#000;
+  font-size:300%;
+  text-align:center;
+}
+
+.login-header a{
+  padding: 16px 0px;
+  display: inline-block;
+}
+
+/* .login-header h1 {
+   text-shadow: 0px 5px 15px #000;
+*/
+
+.login-form {
+  padding-top:15px;
+  border-radius:10px;
+  padding-bottom: 10%;
+  /* background:#4facff; */
+  border:.5px solid #fff;
+  /* box-shadow:0px 0px 10px #000; */
+  box-sizing:border-box;
+  text-align: center;
+  margin:5% auto;
+}
+
+
+.login-form h3 {
+  text-align:left;
+  margin-left:40px;
+  color:#000;
+}
+
+.login input[type="text"],
+.login input[type="password"] {
+  max-width:400px;
+	width: 80%;
+  line-height:3em;
+  font-family: 'Ubuntu', sans-serif;
+  margin:1em 2em;
+  border-radius:5px;
+  border:2px solid #f2f2f2;
+  outline:none;
+  padding-left:10px;
+}
+
+.login-form input[type="submit"] {
+  height:30px;
+  width:200px;
+  background:#0F1745;
+  border:1px solid #f2f2f2;
+  border-radius:20px;
+  color: #FFF;
+  text-transform:uppercase;
+  font-weight: bold;
+  font-family: 'Ubuntu', sans-serif;
+  cursor:pointer;
+}
+
+.password-reset {
+  color:#0F1745;
+  margin: 16px 0px 16px -57%;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+
+/*Media Querie*/
+@media only screen and (min-width : 150px) and (max-width : 530px){
+  .login-form h3 {
+    text-align:center;
+    margin:0;
+  }
+ .password-reset {
+    margin:10px 0;
+  }
+  .login-button {
+    margin-bottom:10px;
+  }
+}
