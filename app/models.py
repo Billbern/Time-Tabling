@@ -15,6 +15,9 @@ class User(db.Model):
     isAdmin = db.Column(db.Boolean(), default=False)
     __table_args__ = (db.CheckConstraint(usertype.in_(['L', 'S'])), )
 
+    def fullname(self):
+        return f"{self.firstname} {self.surname}"
+
     def to_json(self):
         return {"id": self.id, "email": self.email, "First Name": self.firstname, "Last name": self.surname, 'Phone': self.phone}
 
@@ -28,6 +31,13 @@ class TimeTable(db.Model):
     starttime = db.Column(db.Time())
     endtime = db.Column(db.Time())
     lecture = db.Column(db.Integer(), db.ForeignKey('lecture.id'))
+
+    def to_json(self):
+        cur_room = Classroom.query.filter_by(id=self.classroom).first()
+        cur_lecture = Lecture.query.filter_by(id=self.lecture).first()
+        cur_course = Course.query.filter_by(id=cur_lecture.course).first()
+        cur_lecturer= Lecturer.query.filter_by(id=cur_lecture.lecturer).first().to_json()
+        return {'id': self.id, 'classroom': cur_room.building, 'dayofweek': self.dayofweek, 'starttime': self.starttime, 'endtime': self.endtime, 'lecture': f"{cur_course.name}by{cur_lecturer['fullname']}"}
 
 
 class Lecture(db.Model):
@@ -51,7 +61,7 @@ class Lecturer(db.Model):
 
     def to_json(self):
         cur_user = User.query.filter_by(id=self.user).first()
-        return {'id': self.id, 'fullname': cur_user.firstname + ' ' + cur_user.surname, "phone": cur_user.phone, "email": cur_user.email, 'office': self.office, "admin": cur_user.isAdmin }
+        return {'id': self.id, 'fullname': cur_user.fullname(), "phone": cur_user.phone, "email": cur_user.email, 'office': self.office, "admin": cur_user.isAdmin }
 
 
 class Course(db.Model):
@@ -86,7 +96,7 @@ class Student(db.Model):
 
     def to_json(self):
         cur_user = User.query.filter_by(id=self.user).first()
-        return {'id': self.id, 'fullname': cur_user.firstname + ' ' + cur_user.surname, "phone": cur_user.phone, "email": cur_user.email, "year": self.year, 'department': self.department }
+        return {'id': self.id, 'fullname': cur_user.fullname(), "phone": cur_user.phone, "email": cur_user.email, "year": self.year, 'department': self.department }
 
 
 class Classroom(db.Model):
@@ -96,6 +106,9 @@ class Classroom(db.Model):
     building = db.Column(db.String())
     size = db.Column(db.Integer())
     type = db.Column(db.String())
+
+    def to_json(self):
+        return {'id': self.id, 'building': self.building, 'size': self.size, 'type': self.type}
 
 
 class Sessions(db.Model):

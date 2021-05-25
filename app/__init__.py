@@ -7,6 +7,7 @@ from app.config import Config
 
 app = Flask(__name__, static_folder='public')
 app.config.from_object(Config)
+
 Session(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -31,7 +32,9 @@ def administrator():
             all_courses = [course.to_json() for course in Course.query.all()]
             all_students = [student.to_json() for student in Student.query.all()]
             all_lecturers = [lecturer.to_json() for lecturer in Lecturer.query.all()]
-            return render_template('admin.html', courses=all_courses, lecturers=all_lecturers, students=all_students)
+            all_rooms = [room.to_json() for room in Classroom.query.all()]
+            all_tables = [table.json() for table in TimeTable.query.all()]
+            return render_template('admin.html', courses=all_courses, lecturers=all_lecturers, students=all_students, rooms=all_rooms, tables=all_tables)
         return redirect(f"/user/{session['user']['id']}")
     return redirect('/auth/login')
 
@@ -60,8 +63,8 @@ def handle_users():
                 new_student = Student(usertype='S', user=new_user.id, year=request.form.get('year'), department=request.form.get('department'))
                 db.session.add(new_student)
                 db.session.commit()
-                return redirect('/admin/#Students')
-            return redirect('/admin/#Students')
+                return redirect('/admin/')
+            return redirect('/admin/')
         return redirect(f"/user/{session['user']['id']}")
     return redirect('/auth/login')
 
@@ -80,10 +83,29 @@ def handle_lecture():
                 new_lecturer = Lecturer(usertype='L', user=new_user.id, office=request.form.get('office'))
                 db.session.add(new_lecturer)
                 db.session.commit()
-                return redirect('/admin/#Lecturer')
-            return redirect('/admin/#Lecturer')
+                return redirect('/admin/')
+            return redirect('/admin/')
         return redirect(f"/user/{session['user']['id']}")
     return redirect('/auth/login')
+
+
+@app.route('/<section>/delete/<id>', methods=['POST', 'DELETE'])
+def delete_content(section, id):
+    if 'user' in session:
+        if section in ['student', 'lecturer']:
+            if section == 'lecturer' and session['user']['id'] == Lecturer.query.filter_by(id=id).first().user:
+                return redirect('/admin/')
+            item = eval(section.capitalize()).query.filter_by(id=id)
+            item_user = User.query.filter_by(id=item.first().user).delete()
+            item.delete()
+            db.session.commit()
+            return redirect('/admin/')
+        if section == 'course':
+            item = Course.query.filter_by(id=id).delete()
+            db.session.commit()
+            return redirect('/admin/')
+    return redirect('/auth/login')
+
 
 @app.route('/auth/login', methods=["GET", "POST"])
 def user_login():
@@ -102,9 +124,15 @@ def user_login():
         return redirect('/auth/login')
     return render_template('login.html')
 
+
+@app.route('/auth/logout', methods=["GET"])
+def logout():
+    session.pop('user', None)
+    return redirect('/')
+
 @app.route('/user/<user_id>', methods=["GET", "POST"])
 def user_operations(user_id):
-    return render_template('index.html')
+    return render_template('index.html', isAdmin=session['user']['adminStatus'])
 
 
 

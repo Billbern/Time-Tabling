@@ -1,98 +1,115 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <link rel="shortcut icon" href="/images/favicon.ico">
-    <title>Login | UPSA</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-    <link href="url_for('static', filename='css/style2.css')" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="url_for('static', filename='css/font.css')">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='css/style2.css')}}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/font.css')}}">
+    <title>Timetable | UPSA</title>
+    <style>
+        .set_panel{
+            width: 100%; 
+            position: absolute; 
+            left: 0; 
+            bottom: 0; 
+            text-align: right; 
+        }
 
+        .set_panel a{
+            color: #0F1745;
+            font-weight: 600;
+            padding: 10px 24px;
+            display: inline-block;
+            text-transform: capitalize;
+        }
+    </style>
 </head>
-<body class="body-bg-full profile-page" style="background-image: url(bg1.jpg)">
 
-<div id="wrapper" class="row wrapper">
-    <style class="text/css">
-    .text-inverse h4, .text-inverse h3, .text-inverse small {
-    color: #fff !important;
-        /*background-color: ;*/
-        padding-right: 15px;
-        padding-left: 15px;
-}
-    .profile-page .login-left-inner{
-        background-color: #0F1745;
-        margin-bottom: 30px;
-        opacity: 0.8;
-        border: 2px solid #0F1745;
-        max-width: 47.14286em;
+<body class="body-bg-full profile-page" style='background-image: url( {{ url_for("static", filename="img/bg1.jpg") }} )'>
 
-    }
+    <div id="wrapper" class="row wrapper">
+        <style class="text/css">
+            .text-inverse h4,
+            .text-inverse h3,
+            .text-inverse small {
+                color: #fff !important;
+                /*background-color: ;*/
+                padding-right: 15px;
+                padding-left: 15px;
+            }
 
-</style>
+            .profile-page .login-left-inner {
+                background-color: #0F1745;
+                margin-bottom: 30px;
+                opacity: 0.8;
+                border: 2px solid #0F1745;
+                max-width: 47.14286em;
+            }
+        </style>
 
-<div class="col-md-8 text-inverse d-none d-sm-block">
-    <div class="login-left-inner">
-        <div class="login-content">
-            <h3 class="mr-b-20 sub-heading-font-family fw-400">University of Professional Studies Accra</h3>
-            <h4 class="mr-b-20 sub-heading-font-family fw-400">Students' Information System</h4>
+        <div class="col-md-8 text-inverse d-none d-sm-block">
+            <div class="login-left-inner">
+                <div class="login-content">
+                    <h3 class="mr-b-20 sub-heading-font-family fw-400">University of Professional Studies Accra</h3>
+                    <h4 class="mr-b-20 sub-heading-font-family fw-400">Students' Information System</h4>
 
+                </div>
+                <ul class="list-inline login-links" style="padding-right: 15px;padding-left: 15px;">
+                    <li class="list-inline-item"><a href="https://upsa.edu.gh/">UPSA Website</a>
+                    </li>
+                    <li class="list-inline-item"><a href="student.html">Student</a>
+                    </li>
+                    <li class="list-inline-item"><a href="lecture.html">Lecture</a>
+                    </li>
+                    <li class="list-inline-item"><a href="https://join.upsavirtual.site/">Virtual Site</a>
+                    </li>
+
+                </ul>
+            </div>
+            
         </div>
-        <ul class="list-inline login-links" style="padding-right: 15px;padding-left: 15px;">
-            <li class="list-inline-item"><a href="https://upsa.edu.gh/">UPSA Website</a>
-            </li>
-            <li class="list-inline-item"><a href="student.html">Student</a>
-            </li>
-            <li class="list-inline-item"><a href="lecture.html">Lecture</a>
-            </li>
-            <li class="list-inline-item"><a href="https://join.upsavirtual.site/">Virtual Site</a>
-            </li>
-         
-        </ul>
-    </div>
-    <!-- /.login-left-inner -->
-</div>
-<!-- /.login-left -->
-<div class="col-10 ml-auto ml-sm-auto col-sm-8 col-md-4 login-right float-right">
-    <div style="padding-bottom: 100px; padding-top: 30px" class="navbar-header text-center">
-        <a href="#">
-            <img width="200px" alt="" src="logo.png">
-        </a>
-    </div>
-    <h1 style="text-align: center; font-size: 25px; margin-top: -30px; padding-bottom: 30px">My Timetable</h1>
+        
+        <div class="col-10 ml-auto ml-sm-auto col-sm-8 col-md-4 login-right float-right" style="position: relative;">
+            <div style="padding-bottom: 100px; padding-top: 30px" class="navbar-header text-center">
+                <a href="#">
+                    <img width="200px" alt="" src="{{url_for('static', filename='img/logo.png')}}">
+                </a>
+            </div>
+            <h1 style="text-align: center; font-size: 25px; margin-top: -30px; padding-bottom: 30px">My Timetable</h1>
+
+            <form name="form1" id="form1" action="">
+                Year: <select name="subject" id="subject">
+                    <option value="" selected="selected">Year</option>
+                    <option value="" selected="">1</option>
+                </select>
+                <br><br>
+                Program: <select name="subject" id="subject">
+                    <option value="" selected="selected">Program</option>
+                </select>
+                <br><br>
+                Session: <select name="topic" id="topic">
+                    <option value="" selected="selected">Session</option>
+                </select>
+                <br><br>
+                Semester: <select name="chapter" id="chapter">
+                    <option value="" selected="selected">Semester</option>
+                </select>
+                <br><br>
+                <input type="submit" value="submit" class="submit-button">
+            </form>
+
+            <div class="set_panel">
+                {% if isAdmin %}
+                    <a href="/admin/">Admin Panel</a>
+                {% endif %}
+                <a href="/auth/logout">logout</a>
+            </div>
     
-     <form name="form1" id="form1" action="">
-        Year: <select name="subject" id="subject">
-            <option value="" selected="selected">Year</option>
-            <option value="" selected="">1</option>
-                    </select>
-            <br><br>
-        Program: <select name="subject" id="subject">
-            <option value="" selected="selected">Program</option>
-                    </select>
-            <br><br>
-        Session: <select name="topic" id="topic">
-            <option value="" selected="selected">Session</option>
-                    </select>
-            <br><br>
-        Semester: <select name="chapter" id="chapter">
-            <option value="" selected="selected">Semester</option>
-                    </select>
-            <br><br>
-        <input type="submit" value="submit" class="submit-button">
-    </form> 
-    <!-- /.form-group -->
-</div></div>
-<!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem delectus laudantium sunt, at sit libero alias quos. Ratione cumque dicta eum dolorum iste hic veniam doloribus quaerat excepturi, officia dolorem. -->
-
-
-<script type="text/javascript" src="/assets/js/libs/jquery-1.10.2.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="/js/login.js"></script>
-
-<script type="text/javascript" src="/assets/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/js/material-design.js"></script>
-
-<script language="JavaScript" type="text/javascript" src="/js/shared.js"></script>
+        </div>
+    
+    </div>
 
 
 </body>
-</html>
 
+</html>

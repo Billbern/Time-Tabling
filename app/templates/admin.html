@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <style>
         *{
             margin: 0;
@@ -24,40 +25,87 @@
             height: 100%;
         }
 
-        .main-container .top-container{
+        .main-container .tabs{
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-bottom: none;
             background-color: blueviolet;
         }
 
-        .top-container a{
+        .tabs button{
             color: #fff;
-            padding: 16px 24px;
-            text-decoration: none;
-            display: inline-block;
+            background-color: inherit;
+            outline: none;
+            border: none;
+            float: left;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
         }
 
-        a.active{
+        .tabs button:hover{
+            background-color: rgb(193, 128, 255);
+        }
+
+        .tabs button.active{
             color: blueviolet;
             background-color: #fff;
         }
 
-        .main-container .bottom-container{
+        .tabs > div{
+            float: right;
             display: flex;
+        }
+
+        .tabs > div a{
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .main-container .bottom-container{
+            width: 100%;
             height: calc(100% - 51px);
             background-color: #fff;
+            position: relative;
             overflow: hidden;
         }
 
         .bottom-container > .inner{
             width: 100%;
             height: 100%;
-            flex-shrink: 0;
-            flex-basis: auto;
+            background-color: #fff;
             padding-top: 16px;
-            position: relative;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
 
-        .inner table{
+        .bottom-container > .inner.display{
+            z-index: 5;
+        }
+
+        .inner .top_add{
+            width: 100%;
+            padding: 16px 24px;
+            text-align: right;
+        }
+
+        .top_add input{
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 8px 16px;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+            background-color: blueviolet;
+
+        }
+
+        .inner table.table{
             margin: auto;
+            width: 90%;
         }
 
         .inner table td, .inner table th{
@@ -65,48 +113,73 @@
             padding: 16px 8px;
         }
 
-        .inner form{
-            bottom: 24px;
-            left: 10%;
-            width: 80%;
-            right: 10%;
+        .inner table td form{
+            display: inline-block;
+        }
+
+        table td form input{
+            font-size: 14px;
+        }
+
+        .bottom-container .more-data{
+            width: 100%;
+            height: 256px;
             position: absolute;
+            bottom: 0;
+            left: 0;
+            background-color: rgb(193, 128, 255);
+            box-shadow: 0px 0px 4px 2px rgba(0,0,0,0.25);
+            transform: translateY(256px);
+            transition: transform 0.3s ease;
         }
 
-        form input{
-            margin: 4px 0px;
+        .more-data form{
+            width: 90%;
+            height: 100%;
+            margin: 0px auto;
+            padding-top: 32px;
         }
 
-        form input[type=submit]{
-            color: #ffffff;
-            border-radius: 4px;
+        .more-data form input[type=submit]{
+            padding: 10px 18px;
+            color: #fff;
+            margin: 8px;
+            font-size: 14px;
             background-color: blueviolet;
-            box-shadow: 0px 4px 2px rgba(0,0,0,0.15);
-            padding: 8px 32px;
-            cursor: cursor;
-            border: none;
         }
+
+
 
     </style>
     <title>Admin</title>
 </head>
 <body>
     <div class="main-container">
-        <div class="top-container">
-            <a class="active data-items" href="#Courses">Courses</a>
-            <a class="data-items" href="#Students">Students</a>
-            <a class="data-items" href="#Lecturer">Lecturer</a>
+        <div class="tabs">
+            <button class="tablinks active" data-title="Courses" onclick="openContent(event)">Courses</button>
+            <button class="tablinks" data-title="Students" onclick="openContent(event)">Students</button>
+            <button class="tablinks" data-title="Lecturer" onclick="openContent(event)">Lecturer</button>
+            <button class="tablinks" data-title="LectureRooms" onclick="openContent(event)">Lecture Rooms</button>
+            <button class="tablinks" data-title="TimeTable" onclick="openContent(event)">Time Table</button>
+            <div>
+                <a href="/">back</a>
+                <a href="/auth/logout">logout</a>
+            </div>
         </div>
         <div class="bottom-container">
-            <div class="inner" id="Courses">
-                <table width="90%">
-                    <thead>
+            <div class="inner display" id="Courses">
+                <div class="top_add">
+                    <input type="button" value="+">
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
                         <th>Id</th>
                         <th>Name</th>
                         <th>Number</th>
                         <th>Description</th>
                         <th>Year</th>
                         <th>Credit Hours</th>
+                        <th></th>
                     </thead>
                     <tbody>
                         {% if courses %}
@@ -118,108 +191,335 @@
                                 <td>{{course.description}}</td>
                                 <td>{{course.level}}</td>
                                 <td>{{course.credit}}</td>
+                                <td><a class="btn btn-info" href="/course/update/{{course.id}}">Update</a> <form action="/course/delete/{{course.id}}" method="POST"><input type="hidden" name="_method" value="DELETE"/><input type="submit" class="btn btn-danger" value="Delete"/></form></td>
                             </tr>
                             {% endfor %}
                         {% endif %}
                     </tbody>
                 </table>
 
-                <form action="/admin/addcourse" method="post">
-                    <input type="text" name="name" placeholder="Course name" />
-                    <input type="text" name="number" placeholder="Course number" />
-                    <input type="text" name="desc"  placeholder="Course description"/>
-                    <input type="text" name="level" placeholder="Level"/>
-                    <input type="text" name="credit" placeholder="Credit hours"/>
-                    <br>
-                    <input type="submit" value="Add" />
-                </form>
+                <div class="more-data">
+                    <form action="/admin/addcourse" method="post">
+                        <div class="d-flex">
+                            <fieldset class="form-group m-3">
+                                <label for="name">Name</label><br>
+                                <input type="text" name="name" placeholder="name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="number">Number</label><br>
+                                <input type="text" name="number" placeholder=" number" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="desc">Description</label><br>
+                                <input type="text" name="desc"  placeholder=" description"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="level">Level</label><br>
+                                <input type="text" name="level" placeholder="Level"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="credit">Credit Hours</label><br>
+                                <input type="text" name="credit" placeholder="Credit hours"/>
+                            </fieldset>
+                        </div>
+                        
+                        <input class="btn" type="submit" value="Add" />
+                    </form>
+                </div>
+
             </div>
             <div class="inner" id="Students">
-                <table width="90%">
-                    <thead>
+                <div class="top_add">
+                    <input type="button" value="+">
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
                         <th>Id</th>
                         <th>Full Name</th>
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Level</th>
                         <th>Department</th>
+                        <th></th>
                     </thead>
                     <tbody>
                         {% if students %}
                             {% for student in students %}
-                            <tr id="tw">
-                                <td>{{student.id}}</td>
-                                <td>{{student.fullname}}</td>
-                                <td>{{student.phone}}</td>
-                                <td>{{student.email}}</td>
-                                <td>{{student.year}}</td>
-                                <td>{{student.department}}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{student.id}}</td>
+                                    <td>{{student.fullname}}</td>
+                                    <td>{{student.phone}}</td>
+                                    <td>{{student.email}}</td>
+                                    <td>{{student.year}}</td>
+                                    <td>{{student.department}}</td>
+                                    <td><a class="btn btn-info" href="/student/update/{{student.id}}">Update</a> <form action="/student/delete/{{student.id}}" method="POST"><input type="hidden" name="_method" value="DELETE"/><input type="submit" class="btn btn-danger" value="Delete"/></form></td>
+                                </tr>
                             {% endfor %}
                         {% endif %}
                     </tbody>
                 </table>
-                <form action="/admin/addstudents" method="post">
-                    <input type="text" name="firstname" placeholder="First name" />
-                    <input type="text" name="lastname" placeholder="Last name" />
-                    <input type="text" name="othername" placeholder="Other names" />
-                    <input type="text" name="year" placeholder="Year" />
-                    <input type="text" name="department"  placeholder="Department"/>
-                    <input type="text" name="email" placeholder="Email"/>
-                    <input type="text" name="phone" placeholder="Phone"/>
-                    <br>
-                    <input type="submit" value="Add" />
-                </form>
+
+                <div class="more-data">
+                    <form action="/admin/addstudents" method="post">
+                        <div class="d-flex">
+                            <fieldset class="form-group m-3">
+                                <label for="firstname">First Name</label><br>
+                                <input type="text" name="firstname" placeholder="First name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="lastname">Last Name</label><br>
+                                <input type="text" name="lastname" placeholder="Last name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="othername">Other Names</label><br>
+                                <input type="text" name="othername" placeholder="Other names" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="year">Year</label><br>
+                                <input type="text" name="year" placeholder="Year" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="department">Department</label><br>
+                                <input type="text" name="department"  placeholder="Department"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="email">Email</label><br>
+                                <input type="text" name="email" placeholder="Email"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="phone">Phone</label><br>
+                                <input type="text" name="phone" placeholder="Phone"/>
+                            </fieldset>
+                        </div>
+                        <input class="btn" type="submit" value="Add" />
+                    </form>
+                </div>
             </div>
             <div class="inner" id="Lecturer">
-                <table width="90%">
-                    <thead>
+                <div class="top_add">
+                    <input type="button" value="+">
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
                         <th>Id</th>
                         <th>Full Name</th>
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Office</th>
                         <th>Role</th>
+                        <th></th>
                     </thead>
                     <tbody>
                         {% if lecturers %}
                             {% for lecturer in lecturers %}
+                                <tr>
+                                    <td>{{lecturer.id}}</td>
+                                    <td>{{lecturer.fullname}}</td>
+                                    <td>{{lecturer.phone}}</td>
+                                    <td>{{lecturer.email}}</td>
+                                    <td>{{lecturer.office}}</td>
+                                    <td>{{lecturer.admin}}</td>
+                                    <td><a class="btn btn-info" href="/lecturer/update/{{lecturer.id}}">Update</a> <form action="/lecturer/delete/{{lecturer.id}}" method="POST"><input type="hidden" name="_method" value="DELETE"/><input type="submit" class="btn btn-danger" value="Delete"/></form></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div class="more-data">
+                    <form action="/admin/addlecturer" method="post">
+                        <div class="d-flex">
+                            <fieldset class="form-group m-3">
+                                <label for="firstname">First Name</label> <br>
+                                <input type="text" name="firstname" placeholder="First name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="lastname">Last Name</label> <br>
+                                <input type="text" name="lastname" placeholder="Last name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="othername">Other Names</label> <br>
+                                <input type="text" name="othername" placeholder="Other name" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="email">Email</label><br>
+                                <input type="text" name="email" placeholder="Email" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="phone">Phone</label><br>
+                                <input type="text" name="phone"  placeholder="Phone number"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="office">Office</label><br>
+                                <input type="text" name="office" placeholder="Office"/>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="isadmin">Admin</label><br>
+                                <input type="checkbox" name="isadmin" />
+                            </fieldset>    
+                        </div>
+                        <input class="btn" type="submit" value="Add" />
+                    </form>
+                </div>
+            </div>
+            <div class="inner" id="LectureRooms">
+                <div class="top_add">
+                    <input type="button" value="+">
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <th>Id</th>
+                        <th>Building</th>
+                        <th>Size</th>
+                        <th>Type</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% if rooms %}
+                            {% for room in rooms %}
                             <tr>
-                                <td>{{lecturer.id}}</td>
-                                <td>{{lecturer.fullname}}</td>
-                                <td>{{lecturer.phone}}</td>
-                                <td>{{lecturer.email}}</td>
-                                <td>{{lecturer.office}}</td>
-                                <td>{{lecturer.admin}}</td>
+                                <td>{{room.id}}</td>
+                                <td>{{room.building}}</td>
+                                <td>{{room.size}}</td>
+                                <td>{{room.type}}</td>
+                                <td><a class="btn btn-info" href="/room/update/{{room.id}}">Update</a> <form action="/room/delete/{{room.id}}" method="POST"><input type="hidden" name="_method" value="DELETE"/><input type="submit" class="btn btn-danger" value="Delete"/></form></td>
                             </tr>
                             {% endfor %}
                         {% endif %}
                     </tbody>
                 </table>
-                <form action="/admin/addlecturer" method="post">
-                    <input type="text" name="firstname" placeholder="First name" />
-                    <input type="text" name="lastname" placeholder="Last name" />
-                    <input type="text" name="othername" placeholder="Other name" />
-                    <input type="text" name="email" placeholder="Email" />
-                    <input type="text" name="phone"  placeholder="Phone number"/>
-                    <input type="text" name="office" placeholder="Office"/>
-                    <div>
-                        <label for="isadmin">Admin</label>
-                        <input type="checkbox" name="isadmin" />
-                    </div>
-                    <br>
-                    <input type="submit" value="Add" />
-                </form>
+
+                <div class="more-data">
+                    <form action="/admin/addrooms" method="post">
+                        <div class="d-flex">
+                            <fieldset class="form-group m-4">
+                                <label for="roomname">Building Name</label> <br>
+                                <input type="text" name="name" placeholder="Building" />
+                            </fieldset>
+                            <fieldset class="form-group m-4">
+                                <label for="size">Building Capacity</label> <br>
+                                <input type="number" min="20" name="size" placeholder="Building size" />
+                            </fieldset>
+                            <fieldset class="form-group m-4">
+                                <label for="type">Building Type</label> <br>
+                                <input type="text" name="type"  placeholder="Building type"/>
+                            </fieldset>
+                        </div>
+                        <input class="btn" type="submit" value="Add" />
+                    </form>
+                </div>
+
+            </div>
+            <div class="inner" id="TimeTable">
+                <div class="top_add">
+                    <input type="button" value="+">
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <th>Id</th>
+                        <th>Class Room</th>
+                        <th>Day of the Week</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Lecture</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        {% if tables %}
+                            {% for table in tables %}
+                            <tr>
+                                <td>{{table.id}}</td>
+                                <td>{{table.classroom}}</td>
+                                <td>{{table.dayofweek}}</td>
+                                <td>{{table.starttime}}</td>
+                                <td>{{table.endtime}}</td>
+                                <td>{{table.lecture}}</td>
+                                <td><a class="btn btn-info" href="/table/update/{{table.id}}">Update</a> <form action="/table/delete/{{table.id}}" method="POST"><input type="hidden" name="_method" value="DELETE"/><input type="submit" class="btn btn-danger" value="Delete"/></form></td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <div class="more-data">
+                    <form action="/admin/addtable" method="post">
+                        <div class="d-flex">
+                            <fieldset class="form-group m-3">
+                                <label for="room">Building name</label> <br>
+                                <input type="text" name="room" placeholder="Lecture room" />
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="dayofweek">Day for Lecture</label> <br>
+                                <select name="dayofweek" id="">
+                                    <option value="Mon">Monday</option>
+                                    <option value="Tues">Tuesday</option>
+                                    <option value="Wed">Wednesday</option>
+                                    <option value="Thurs">Thursday</option>
+                                    <option value="Fri">Friday</option>
+                                    <option value="Sat">Saturday</option>
+                                    <option value="Sun">Sunday</option>
+                                </select>
+                            </fieldset>
+                            <fieldset class="d-flex form-group">
+                                <div class="m-3">
+                                    <label for="starttime">Lecture starts</label> <br>
+                                    <input type="time" name="starttime" id=""/>
+                                </div>
+                                <div class="m-3">
+                                    <label for="endtime">Lecture ends</label> <br>
+                                    <input type="time" name="endtime" id=""/>
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group m-3">
+                                <label for="Course">Course name</label> <br>
+                                <input type="text" name="Course" id="" placeholder="Course name"/>
+                            </fieldset>
+                            <fieldset class="d-flex form-group">
+                                <div class="m-3">
+                                    <label for="firstname">Lecturer's First Name</label> <br>
+                                    <input type="text" name="firstname" id="" placeholder="Lecturer's first name"/>
+                                </div>
+                                <div class="m-3">
+                                    <label for="surname">Lecturer's Last Name</label> <br>
+                                    <input type="text" name="surname" id="" placeholder="Lecturer's last name"/>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <input class="btn" type="submit" value="Add" />
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
     <script type="text/javascript">
-        const tabs = document.querySelectorAll('.data-items');
+        function openContent(evt){
+            let i, tabContent, tablink;
 
-        tabs.forEach(item => {
-            item.onclick = () => {
-                tabs.forEach(tab => {tab.classList.remove('active')});
-                item.classList.add('active');
+            tabContent = document.querySelectorAll('.inner');
+            tabContent.forEach(content =>{
+                content.classList.remove('display');
+            })
+
+            tablink = document.querySelectorAll('.tablinks');
+            tablink.forEach(link =>{
+                link.classList.remove('active');
+            })
+
+            document.querySelector(`#${evt.target.dataset.title}`).classList.add('display');
+            evt.target.classList.add('active');
+        }
+
+        document.querySelectorAll('.top_add input[type=button]').forEach(item =>{
+            let count = 0;
+            item.onclick = e => {
+                count += 1;
+                const addButton = e.target.parentNode.parentNode.lastElementChild;
+                if (count % 2 !== 0){
+                    addButton.style.transform = 'translateY(0)';
+                }
+                if(count % 2 === 0){
+                    addButton.style.transform = 'translateY(256px)'
+                }
             }
         })
     </script>
