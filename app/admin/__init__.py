@@ -65,6 +65,24 @@ def handle_lecture():
         return redirect(f"/user/{session['user']['id']}")
     return redirect('/auth/login')
 
+@app.route('/admin/addtable', methods=["POST"])
+def handle_table():
+    if 'user' in session:
+        if session['user']['adminStatus'] == True:
+            pass
+    return redirect('/auth/login')
+
+@app.route('/admin/addroom', methods=["POST"])
+def handle_room():
+    if 'user' in session:
+        if session['user']['adminStatus'] == True:
+            if request.form.get('roomname') and request.form.get('size') and request.form.get('type'):
+                new_room = Classroom(building=request.form.get('roomname'), size=request.form.get('size'), type=request.form.get('type'))
+                db.session.add(new_room)
+                db.session.commit()
+            return redirect('/admin/')
+        return redirect('/')
+    return redirect('/auth/login')
 
 @app.route('/<section>/delete/<id>', methods=['POST', 'DELETE'])
 def delete_content(section, id):
@@ -78,7 +96,15 @@ def delete_content(section, id):
             db.session.commit()
             return redirect('/admin/')
         if section == 'course':
-            item = Course.query.filter_by(id=id).delete()
+            Course.query.filter_by(id=id).delete()
+            db.session.commit()
+            return redirect('/admin/')
+        if section == 'room':
+            Classroom.query.filter_by(id=id).delete()
+            db.session.commit()
+            return redirect('/admin/')
+        if section == 'table':
+            Course.query.filter_by(id=id).delete()
             db.session.commit()
             return redirect('/admin/')
     return redirect('/auth/login')

@@ -103,7 +103,7 @@ class Classroom(db.Model):
     __tablename__ = 'classroom'
 
     id = db.Column(db.Integer(), primary_key=True)
-    building = db.Column(db.String())
+    building = db.Column(db.String(), unique=True)
     size = db.Column(db.Integer())
     type = db.Column(db.String())
 
